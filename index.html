@@ -12,15 +12,15 @@
     <script>
 
       $(document).ready(function(){
-        var $body = $('body');
-        //$body.html(''); this was removing all of the html in the body which was not very helpful atm
+        var $tweetFeed = $('#tweetFeed');
+        $tweetFeed.html('');
 
         var index = streams.home.length - 1;
         while(index >= 0){
           var tweet = streams.home[index];
           var $tweet = $('<div></div>');
           $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
+          $tweet.appendTo($tweetFeed);
           index -= 1;
         }
 
@@ -35,7 +35,7 @@
 			</ul>
 		</nav>
 	</header>
-	<section>
+	<section class="container" id="tweetFeed">
 	</section>
 	<footer class="primary-footer group container">
 	</footer>

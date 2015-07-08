@@ -138,6 +138,10 @@ strong {
 cite, em {
   font-style: italic;
 }
+tr{
+	color: black;
+	text-align: right;
+}
 
 /*
   ========================================
