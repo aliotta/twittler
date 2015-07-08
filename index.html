@@ -20,11 +20,9 @@
         while(index >= 0){
 			var tweet = streams.home[index];
 			if (tweet.user in usersTweetHistory){ // updates message history to include current message
-				var count = 1;
-				usersTweetHistory[tweet.user][count] = tweet.message; 
-				count += 1;
+				usersTweetHistory[tweet.user].push(tweet.message); 
 			} else{ // initializes message history for user when they tweet their first message
-				var messages = {0:tweet.message}; 
+				var messages = [tweet.message]; 
 				usersTweetHistory[tweet.user] = messages;
 		    };
             var $tweet = $('<div class="tweet"></div>');
