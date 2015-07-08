@@ -16,16 +16,28 @@
         $tweetFeed.html('');
 
         var index = streams.home.length - 1;
+		var usersTweetHistory = {};
         while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div class="tweet"></div>');
-		  var $user = $('<div class="user"></div>');
-		  $user.text('@' + tweet.user);
-          $tweet.text(': ' + tweet.message);
-          $tweet.appendTo($tweetFeed);
-		  $user.prependTo($tweet);
-          index -= 1;
+			var tweet = streams.home[index];
+			if (tweet.user in usersTweetHistory){ // updates message history to include current message
+				var count = 1;
+				usersTweetHistory[tweet.user][count] = tweet.message; 
+				count += 1;
+			} else{ // initializes message history for user when they tweet their first message
+				var messages = {0:tweet.message}; 
+				usersTweetHistory[tweet.user] = messages;
+		    };
+            var $tweet = $('<div class="tweet"></div>');
+		    var $userTag = $('<div class="user"></div>');
+		    $userTag.text('@' + tweet.user);
+            $tweet.text(': ' + tweet.message);
+            $tweet.appendTo($tweetFeed);
+		    $userTag.prependTo($tweet);
+            index -= 1;
         }
+		$('.user').on('click', function(){
+			var user
+		});
 
       });
 
@@ -39,6 +51,8 @@
 		</nav>
 	</header>
 	<section class="container" id="tweetFeed">
+	</section>
+	<section class="container" id="userHistory">
 	</section>
 	<footer class="primary-footer group container">
 	</footer>
