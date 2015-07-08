@@ -49,4 +49,52 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+/*
+  ========================================
+  Grid this selects all possible elements and switches them to the border box model to make sizing easier thanks css3
+  ========================================
+*/
 
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+/*
+  ========================================
+  Columns
+  ========================================
+*/
+
+.col-1-3 {
+  width: 33.33%;
+} .col-2-3 {
+  width: 66.66%;
+}
+
+.col-1-3,
+.col-2-3 {
+  display: inline-block;
+  vertical-align: top;
+  padding: 0 15px 0 15px;
+}
+
+/*
+  ========================================
+  Clearfix  If I create a column it will fix the floats so nothing breaks
+  ========================================
+*/
+.group:before,
+.group:after {
+  content: "";
+  display: table;
+}
+.group:after {
+  clear: both;
+}
+.group {
+  clear: both;
+  *zoom: 1;
+}
