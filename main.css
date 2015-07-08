@@ -51,7 +51,7 @@ table {
 }
 /*
   ========================================
-  Grid this selects all possible elements and switches them to the border box model to make sizing easier thanks css3
+  Set's Border Box as default 
   ========================================
 */
 
@@ -61,6 +61,23 @@ table {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
+}
+/*
+  ========================================
+  Containers for normal page layout and grid for column layout
+  ========================================
+*/
+.container, .grid {
+	width: 960px;
+	margin: 0 auto;
+}
+.container{
+	padding-left: 30px;
+	padding-right: 30px;
+}
+.lead-container{
+	margin: 0 192.5px;
+	padding: 0 30px;
 }
 /*
   ========================================
