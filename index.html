@@ -34,9 +34,12 @@
             index -= 1;
         }
 		$('.user').on('click', function(){
+		
 			var $userHistory = $('#userHistory');
 			$userHistory.html('');
 			var selectedUser = $(this).text().slice(1);
+			var $selectedUserTitle = $('<div>' + selectedUser +'\'s Tweet History</div>');
+			$selectedUserTitle.appendTo($userHistory);
 			var userMessages = usersTweetHistory[selectedUser];
 			for (i=0; i< userMessages.length; i++){
 				var $oldTweet = $('<div class="oldTweet"></div>');
