@@ -7,46 +7,63 @@
     <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400' rel='stylesheet' type='text/css'>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
   </head>
   <body>
     <script>
-
-      $(document).ready(function(){
-        var $tweetFeed = $('#tweetFeed');
-        $tweetFeed.html('');
-
-        var index = streams.home.length - 1;
-		var usersTweetHistory = {};
-        while(index >= 0){
-			var tweet = streams.home[index];
-			if (tweet.user in usersTweetHistory){ // updates message history to include current message
-				usersTweetHistory[tweet.user].push(tweet.message); 
-			} else{ // initializes message history for user when they tweet their first message
-				var messages = [tweet.message]; 
-				usersTweetHistory[tweet.user] = messages;
-		    };
-            var $tweet = $('<div class="tweet"></div>');
-		    var $userTag = $('<div class="user"></div>');
-		    $userTag.text('@' + tweet.user);
-            $tweet.text(': ' + tweet.message);
-            $tweet.appendTo($tweetFeed);
-		    $userTag.prependTo($tweet);
-            index -= 1;
+    	moment().format();
+        var allMessages =[];
+        var usersTweetHistory = {};
+        function loadTweetHistory(){
+      	    var index = streams.home.length -1;
+      	    var $tweetFeed = $('#tweetFeed');
+			while(index >= 0){ 
+				var tweet = streams.home[index];
+				var message = tweet.message + ' ' + tweet.created_at;
+				if(allMessages.indexOf(message) === -1){
+					allMessages.push(message);
+					if (tweet.user in usersTweetHistory){ // updates message history to include current message
+						usersTweetHistory[tweet.user].push(message); 
+					} else{ // initializes message history for user when they tweet their first message
+						var messages = [message]; 
+						usersTweetHistory[tweet.user] = messages;
+			    	};
+			    	var $tweet = $('<div class="tweet"></div>');
+			    	var $userTag = $('<div class="user"></div>');
+			    	$userTag.text('@' + tweet.user);
+	            	$tweet.text(': ' + tweet.message + ' ' + moment(tweet.created_at).fromNow());
+		            $tweet.appendTo($tweetFeed);
+				    $userTag.prependTo($tweet);
+				}
+				index -=1;
+			}
         }
-		$('.user').on('click', function(){
-		
-			var $userHistory = $('#userHistory');
-			$userHistory.html('');
-			var selectedUser = $(this).text().slice(1);
-			var $selectedUserTitle = $('<div>' + selectedUser +'\'s Tweet History</div>');
-			$selectedUserTitle.appendTo($userHistory);
-			var userMessages = usersTweetHistory[selectedUser];
-			for (i=0; i< userMessages.length; i++){
-				var $oldTweet = $('<div class="oldTweet"></div>');
-				$oldTweet.text(userMessages[i]);
-				$oldTweet.appendTo($userHistory);
-			};
-		});
+
+		function logUserTagEventHandler(){
+			$('.user').on('click', function(){ //loads tweet history of user when tag is clicked
+			
+				var $userHistory = $('#userHistory');
+				$userHistory.html('');  //clear previously selected users information
+				var selectedUser = $(this).text().slice(1); // remove @ symbol from user tag
+				var $selectedUserTitle = $('<div>' + selectedUser +'\'s Tweet History</div>'); // create a title for history
+				$selectedUserTitle.appendTo($userHistory);
+				var userMessages = usersTweetHistory[selectedUser]; // get object corresponding to users messages
+				for (i=0; i< userMessages.length; i++){ // for each message output in history section
+					var $oldTweet = $('<div class="oldTweet"></div>');
+					$oldTweet.text(userMessages[i]);
+					$oldTweet.appendTo($userHistory);
+				};
+			});
+		}
+
+        $(document).ready(function(){
+			loadTweetHistory();
+			logUserTagEventHandler();
+
+			$('.refresh').on('click', function(){ //load new tweet data on click of refresh button
+				loadTweetHistory();
+				logUserTagEventHandler();
+			});
 
       });
 
@@ -55,7 +72,7 @@
 		<h1>Twittler</h1>
 		<nav class="nav primary-nav">
 			<ul>
-				<li><a href="index.html">Refresh</a></li>
+				<li class="refresh">Refresh</li>
 			</ul>
 		</nav>
 	</header>
