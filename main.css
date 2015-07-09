@@ -153,6 +153,7 @@ tr{
 
 .user:hover{
 	color: #629833;
+	text-decoration : underline;
 }
 
 /*

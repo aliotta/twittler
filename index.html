@@ -34,7 +34,15 @@
             index -= 1;
         }
 		$('.user').on('click', function(){
-			var user
+			var $userHistory = $('#userHistory');
+			$userHistory.html('');
+			var selectedUser = $(this).text().slice(1);
+			var userMessages = usersTweetHistory[selectedUser];
+			for (i=0; i< userMessages.length; i++){
+				var $oldTweet = $('<div class="oldTweet"></div>');
+				$oldTweet.text(userMessages[i]);
+				$oldTweet.appendTo($userHistory);
+			};
 		});
 
       });
