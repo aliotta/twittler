@@ -10,17 +10,23 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
   </head>
   <body>
-    <script> //TODO fix home button so all old messages are included //TODO beautify user tweet history page //Make refresh button work for user history page
+    <script> //TODO beautify user tweet history page //Make refresh button work for user history page
     	moment().format(); // used to initialize moment.js (used for timestamp readability)
-        var allMessages =[];
+        var allMessages = []; //TODO might not be necessary to have both varaiables allMessages and allTweets
+		var allTweets = [];
         var usersTweetHistory = {};
 		var $tweetFeed = $('#tweetFeed');
+		function loadAllMessages(){
+			for (var i = 0; i < allTweets.length; i++){
+				allTweets[i].appendTo($('#tweetFeed'));
+			}
+		}
         function refreshTweetHistory(){
 			var $tweetFeed = $('#tweetFeed');
       	    var index = streams.home.length -1;
 			while(index >= 0){ 
 				var tweet = streams.home[index];
-				var message = tweet.message + ' ' + tweet.created_at;
+				var message = tweet.message + ' ' + moment(tweet.created_at).fromNow();
 				if(allMessages.indexOf(message) === -1){ //checks if message has been tweeted before
 					allMessages.push(message);
 					if (tweet.user in usersTweetHistory){ // updates message history to include current message
@@ -35,6 +41,7 @@
 	            	$tweet.text(': ' + tweet.message + ' ' + moment(tweet.created_at).fromNow());
 		            $tweet.appendTo($tweetFeed);
 				    $userTag.prependTo($tweet);
+					allTweets.push($tweet);
 				}
 				index -=1;
 			}
@@ -60,6 +67,7 @@
 		}
 
         $(document).ready(function(){
+			$('.myFeed').hide();
 			var $homeTitle = $('<div class="title">Most Recent Tweets</div>')
 			$homeTitle.appendTo($('#tweetFeed'));
 			refreshTweetHistory();
@@ -75,10 +83,13 @@
 				$tweetFeed.html('');  //clear data
 				var $homeTitle = $('<div class="title">Most Recent Tweets</div>')
 				$homeTitle.appendTo($tweetFeed);
+				loadAllMessages();
 				refreshTweetHistory();
 				logUserTagEventHandler();
 			});
-
+			$('.login').on('click', function(){ //toggle login fields when clicked
+				//TODO Flesh this out so a user can login and see their own tweets once they click .myFeed
+			});
       });
 
     </script>
@@ -88,7 +99,8 @@
 			<ul>
 				<li class="refresh"><h4>Refresh</h4></li>
 				<li class="home"><h4>Home</h4></li>
-				<li><h4>My Feed</h4></li>
+				<li class="login"><h4>Login</h4></li>
+				<li class="myFeed"><h4>My Feed</h4></li>
 			</ul>
 		</nav>
 	</header>
