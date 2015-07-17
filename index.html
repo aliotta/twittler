@@ -26,7 +26,7 @@
       	    var index = streams.home.length -1;
 			while(index >= 0){ 
 				var tweet = streams.home[index];
-				var message = tweet.message + ' ' + moment(tweet.created_at).fromNow();
+				var message = tweet.message + ' ' + tweet.created_at;
 				if(allMessages.indexOf(message) === -1){ //checks if message has been tweeted before
 					allMessages.push(message);
 					if (tweet.user in usersTweetHistory){ // updates message history to include current message
@@ -38,7 +38,7 @@
 			    	var $tweet = $('<div class="tweet"></div>');
 			    	var $userTag = $('<div class="user"></div>');
 			    	$userTag.text('@' + tweet.user);
-	            	$tweet.text(': ' + tweet.message + ' ' + moment(tweet.created_at).fromNow());
+	            	$tweet.text(': ' + tweet.message + ' ' + tweet.created_at);
 		            $tweet.appendTo($tweetFeed);
 				    $userTag.prependTo($tweet);
 					allTweets.push($tweet);
