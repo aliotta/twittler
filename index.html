@@ -10,7 +10,7 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
   </head>
   <body>
-    <script>
+    <script> //TODO fix home button so all old messages are included //TODO beautify user tweet history page //Make refresh button work for user history page
     	moment().format(); // used to initialize moment.js (used for timestamp readability)
         var allMessages =[];
         var usersTweetHistory = {};
@@ -60,6 +60,8 @@
 		}
 
         $(document).ready(function(){
+			var $homeTitle = $('<div class="title">Most Recent Tweets</div>')
+			$homeTitle.appendTo($('#tweetFeed'));
 			refreshTweetHistory();
 			logUserTagEventHandler();
 
@@ -68,8 +70,11 @@
 				logUserTagEventHandler();
 			});
 			$('.home').on('click', function(){ //load all data generated
+				var $tweetFeed = $('#tweetFeed')
 				$('.refresh').show();
-				$('#tweetFeed').html('');  //clear data
+				$tweetFeed.html('');  //clear data
+				var $homeTitle = $('<div class="title">Most Recent Tweets</div>')
+				$homeTitle.appendTo($tweetFeed);
 				refreshTweetHistory();
 				logUserTagEventHandler();
 			});

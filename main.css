@@ -205,6 +205,16 @@ tr{
 	text-align: center;
 	color: #FFFFFF;
 }
+/* 
+  ========================================
+  Title's
+  ========================================
+*/
+.title{
+	text-align: center;
+	font-size: 22px;
+	padding-bottom: 5px;
+}
 /*
   =========================================
   Navigation
