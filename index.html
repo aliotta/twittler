@@ -11,16 +11,17 @@
   </head>
   <body>
     <script>
-    	moment().format();
+    	moment().format(); // used to initialize moment.js (used for timestamp readability)
         var allMessages =[];
         var usersTweetHistory = {};
-        function loadTweetHistory(){
+		var $tweetFeed = $('#tweetFeed');
+        function refreshTweetHistory(){
+			var $tweetFeed = $('#tweetFeed');
       	    var index = streams.home.length -1;
-      	    var $tweetFeed = $('#tweetFeed');
 			while(index >= 0){ 
 				var tweet = streams.home[index];
 				var message = tweet.message + ' ' + tweet.created_at;
-				if(allMessages.indexOf(message) === -1){
+				if(allMessages.indexOf(message) === -1){ //checks if message has been tweeted before
 					allMessages.push(message);
 					if (tweet.user in usersTweetHistory){ // updates message history to include current message
 						usersTweetHistory[tweet.user].push(message); 
@@ -40,28 +41,36 @@
         }
 
 		function logUserTagEventHandler(){
+			var $tweetFeed = $('#tweetFeed');
 			$('.user').on('click', function(){ //loads tweet history of user when tag is clicked
-			
-				var $userHistory = $('#userHistory');
-				$userHistory.html('');  //clear previously selected users information
+				$('.refresh').hide();
+				$tweetFeed.html('');  //clear previously selected users information
 				var selectedUser = $(this).text().slice(1); // remove @ symbol from user tag
 				var $selectedUserTitle = $('<div>' + selectedUser +'\'s Tweet History</div>'); // create a title for history
-				$selectedUserTitle.appendTo($userHistory);
+				$selectedUserTitle.addClass("title");
+				$selectedUserTitle.appendTo($tweetFeed);
 				var userMessages = usersTweetHistory[selectedUser]; // get object corresponding to users messages
+				
 				for (i=0; i< userMessages.length; i++){ // for each message output in history section
 					var $oldTweet = $('<div class="oldTweet"></div>');
 					$oldTweet.text(userMessages[i]);
-					$oldTweet.appendTo($userHistory);
+					$oldTweet.appendTo($tweetFeed);
 				};
 			});
 		}
 
         $(document).ready(function(){
-			loadTweetHistory();
+			refreshTweetHistory();
 			logUserTagEventHandler();
 
 			$('.refresh').on('click', function(){ //load new tweet data on click of refresh button
-				loadTweetHistory();
+				refreshTweetHistory();
+				logUserTagEventHandler();
+			});
+			$('.home').on('click', function(){ //load all data generated
+				$('.refresh').show();
+				$('#tweetFeed').html('');  //clear data
+				refreshTweetHistory();
 				logUserTagEventHandler();
 			});
 
@@ -72,8 +81,8 @@
 		<h1>Twittler</h1>
 		<nav class="nav primary-nav">
 			<ul>
-				<li><h4>Home</h4></li>
 				<li class="refresh"><h4>Refresh</h4></li>
+				<li class="home"><h4>Home</h4></li>
 				<li><h4>My Feed</h4></li>
 			</ul>
 		</nav>
