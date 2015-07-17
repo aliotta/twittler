@@ -50,12 +50,13 @@
 		function logUserTagEventHandler(){
 			var $tweetFeed = $('#tweetFeed');
 			$('.user').on('click', function(){ //loads tweet history of user when tag is clicked
-				$('.refresh').hide();
+				$('.refresh').hide(); // hide refresh button
+				$('.home').show(); // Show home button 
 				$tweetFeed.html('');  //clear previously selected users information
 				var selectedUser = $(this).text().slice(1); // remove @ symbol from user tag
 				var $selectedUserTitle = $('<div>' + selectedUser +'\'s Tweet History</div>'); // create a title for history
 				$selectedUserTitle.addClass("title");
-				$selectedUserTitle.appendTo($tweetFeed);
+				$selectedUserTitle.appendTo($('titleRow'));
 				var userMessages = usersTweetHistory[selectedUser]; // get object corresponding to users messages
 				
 				for (i=0; i< userMessages.length; i++){ // for each message output in history section
@@ -68,8 +69,9 @@
 
         $(document).ready(function(){
 			$('.myFeed').hide();
+			$('.home').hide(); //Hide home button 
 			var $homeTitle = $('<div class="title">Most Recent Tweets</div>')
-			$homeTitle.appendTo($('#tweetFeed'));
+			$homeTitle.appendTo($('.titleRow'));
 			refreshTweetHistory();
 			logUserTagEventHandler();
 
@@ -81,8 +83,9 @@
 				var $tweetFeed = $('#tweetFeed')
 				$('.refresh').show();
 				$tweetFeed.html('');  //clear data
+				$('.titleRow').html('')
 				var $homeTitle = $('<div class="title">Most Recent Tweets</div>')
-				$homeTitle.appendTo($tweetFeed);
+				$homeTitle.appendTo($('.titleRow'));
 				loadAllMessages();
 				refreshTweetHistory();
 				logUserTagEventHandler();
@@ -105,6 +108,8 @@
 		</nav>
 	</header>
 	<section class="homerow">
+		<section class="container titleRow">
+		</section>
 		<section class="container tweetFeed" id="tweetFeed">
 		</section>
 		<section class="container" id="userHistory">
