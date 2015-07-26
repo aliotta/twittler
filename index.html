@@ -10,16 +10,31 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
   </head>
   <body>
-    <script> //TODO beautify user tweet history page //Make refresh button work for user history page
+    <script> 
     	moment().format(); // used to initialize moment.js (used for timestamp readability)
         var allMessages = []; //TODO might not be necessary to have both varaiables allMessages and allTweets
 		var allTweets = [];
         var usersTweetHistory = {};
 		var $tweetFeed = $('#tweetFeed');
-		function loadAllMessages(){
+		var regExTimeStamp = /\w{3}\s\w{3}\s\d+\s\d{4}\s\d+\:\d{2}\:\d{2}\s\w{3}\-\d{4}\s\(\w{3}\)/; // used to find time stamp when loading all messages
+		function displayMessage(message){ // adds properlly message to tweetfeed
+			var outputMessage = message.clone();
+			var tweetMessage = outputMessage.children('.message');
+			var beautifiedMessage = beautifyTimeStamp(tweetMessage.text(), regExTimeStamp);
+			tweetMessage.text(beautifiedMessage);
+			outputMessage.appendTo($('#tweetFeed'));
+		}
+		function loadAllMessages(){ // used to display all messages in history
 			for (var i = 0; i < allTweets.length; i++){
-				allTweets[i].appendTo($('#tweetFeed'));
+				var outputMessage = allTweets[i];
+				displayMessage(outputMessage);
 			}
+		}
+		function beautifyTimeStamp(string, regex){ // returns string with time stamp beautified
+			var uglyTimeStamp = regex.exec(string)[0];
+			var prettyTimeStamp = moment(uglyTimeStamp).fromNow();
+			var beautifiedString = string.replace(regex, prettyTimeStamp);
+			return beautifiedString;
 		}
         function refreshTweetHistory(){
 			var $tweetFeed = $('#tweetFeed');
@@ -37,10 +52,12 @@
 			    	};
 			    	var $tweet = $('<div class="tweet"></div>');
 			    	var $userTag = $('<div class="user"></div>');
+			    	var $message = $('<div class="message"></div>');
 			    	$userTag.text('@' + tweet.user);
-	            	$tweet.text(': ' + tweet.message + ' ' + tweet.created_at);
-		            $tweet.appendTo($tweetFeed);
-				    $userTag.prependTo($tweet);
+	            	$message.text(': ' + tweet.message + ' ' + tweet.created_at);
+				    $userTag.appendTo($tweet);
+				    $message.appendTo($tweet);
+				    displayMessage($tweet);
 					allTweets.push($tweet);
 				}
 				index -=1;
@@ -62,9 +79,13 @@
 				
 				for (i=0; i< userMessages.length; i++){ // for each message output in history section
 					var $oldTweet = $('<div class="oldTweet"></div>');
-					$oldTweet.text(": " + userMessages[i]);
-					$(this).clone().prependTo($oldTweet);
-					$oldTweet.appendTo($tweetFeed);
+					var $userTag = $('<div class="user"></div>');
+			    	var $message = $('<div class="message"></div>');
+			    	$userTag.appendTo($oldTweet);
+				    $message.appendTo($oldTweet);
+					$message.text(": " + userMessages[i]);
+					$userTag.text($(this).text());
+					displayMessage($oldTweet);
 				};
 				logUserTagEventHandler()
 			});
@@ -83,6 +104,7 @@
 				logUserTagEventHandler();
 			});
 			$('.home').on('click', function(){ //load all data generated
+				$('.home').hide();
 				var $tweetFeed = $('#tweetFeed')
 				$('.titleRow').html('');  
 				var $homeTitle = $('<div class="title">Most Recent Tweets</div>')
