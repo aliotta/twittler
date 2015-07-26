@@ -53,17 +53,20 @@
 				$('.refresh').hide(); // hide refresh button
 				$('.home').show(); // Show home button 
 				$tweetFeed.html('');  //clear previously selected users information
+				$('.titleRow').html('');  
 				var selectedUser = $(this).text().slice(1); // remove @ symbol from user tag
 				var $selectedUserTitle = $('<div>' + selectedUser +'\'s Tweet History</div>'); // create a title for history
 				$selectedUserTitle.addClass("title");
-				$selectedUserTitle.appendTo($('titleRow'));
+				$selectedUserTitle.appendTo($('.titleRow'));
 				var userMessages = usersTweetHistory[selectedUser]; // get object corresponding to users messages
 				
 				for (i=0; i< userMessages.length; i++){ // for each message output in history section
 					var $oldTweet = $('<div class="oldTweet"></div>');
-					$oldTweet.text(userMessages[i]);
+					$oldTweet.text(": " + userMessages[i]);
+					$(this).clone().prependTo($oldTweet);
 					$oldTweet.appendTo($tweetFeed);
 				};
+				logUserTagEventHandler()
 			});
 		}
 
@@ -81,6 +84,8 @@
 			});
 			$('.home').on('click', function(){ //load all data generated
 				var $tweetFeed = $('#tweetFeed')
+				$('.titleRow').html('');  
+				var $homeTitle = $('<div class="title">Most Recent Tweets</div>')
 				$('.refresh').show();
 				$tweetFeed.html('');  //clear data
 				$('.titleRow').html('')
